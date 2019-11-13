@@ -66,7 +66,7 @@ class Model {
    * @return {Promise<object>}                    The updated record and its contents
    */
   update(_id, record) {
-    return this.schema.updateOne({ _id }, record, { new: true });
+    return this.schema.updateOne({ _id }, record);
   }
 
   /**

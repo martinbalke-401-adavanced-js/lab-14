@@ -8,10 +8,11 @@ const mongoose = require('mongoose');
 const path = require('path');
 
 // Esoteric Resources
-const errorHandler = require('./middleware/500.js');
+const errorHandler = require('./middleware/error.js');
 const notFound = require('./middleware/404.js');
 const authRouter = require('./routes/auth-router.js');
-const roleRouter = require('./routes/role-router.js');
+const bookRouter = require('./routes/book-router.js');
+const modelRouter = require('./routes/model-router.js');
 
 // Prepare the express app
 const app = express();
@@ -30,7 +31,8 @@ app.get('/', (req, res, next) => {
 });
 
 app.use(authRouter);
-app.use('/role', roleRouter);
+app.use(modelRouter);
+app.use(bookRouter);
 
 // Catchalls
 app.use(notFound);
