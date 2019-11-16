@@ -24,8 +24,11 @@ router.get('/model/:model', preventAuthErrors, auth, async (req, res, next) => {
     model: req.params.model,
     count: recordCount,
   };
+  if(req.user && req.user.role === 'admin') {
+    console.log('here');
+    resData.records = records;
 
-  if(req.user && req.user.role === 'admin') resData.records = records;
+  }
 
   res.status(200).json(resData);
 

@@ -28,7 +28,7 @@ const basicDecode = async (encoded) => {
 };
 
 const bearerDecrypt = async (token) => {
-  
+  console.log('bearer');
   try {
     let tokenData = jwt.verify(token, process.env.JWT_SECRET);
     if(tokenData && tokenData.data) return await users.get(tokenData.data.id);
@@ -46,7 +46,7 @@ const bearerDecrypt = async (token) => {
  * @returns {object} - The token generated from our authorizations
  */
 module.exports = async (req, res, next) => {
-
+  console.log(req.headers);
 
   if (!req.headers.authorization) 
     return req.authError === false ? next() : next({ status: 400, msg: 'Missing request headers' });
@@ -56,14 +56,15 @@ module.exports = async (req, res, next) => {
 
   let authType = authSplitString[0];
   let authData = authSplitString[1];
-
+  console.log(authType);
   let user;
 
   if(authType === 'Basic') user = await basicDecode(authData);
   else if (authType === 'Bearer') user = await bearerDecrypt(authData);
   else return req.authError === false ? next() : next({ status: 400, msg: 'Neither Basic nor Bearer request header'});
-
+  console.log(user);
   if(user){
+    console.log('in this');
     req.user = user;
     req.token = user.generateToken(req.headers.timeout);
     return next();

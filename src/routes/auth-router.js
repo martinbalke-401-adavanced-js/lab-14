@@ -21,7 +21,7 @@ router.post('/signup', auth, (req, res, next) => {});
  * @returns {object} 200 - The bearer token
  */
 router.post('/signin', auth, (req, res, next) => {
-  res.status(200).json({token: 'Bearer' + req.token});
+  res.status(200).json({token: 'Bearer ' + req.token});
 });
 
 module.exports = router;
