@@ -3,11 +3,12 @@
 const { startDB, stopDB } = require('./supertester.js');
 const Users = require('../src/models/users-model.js');
 const Roles = require('../src/models/roles-model.js');
-const Books = require('../src/models/books-modle.js');
+const Books = require('../src/models/books-model.js');
 const server = require('../src/server.js').server;
 const supertester = require('./supertester.js');
 
 const mockRequest = supertester.server(server);
+
 
 let users = {
   admin: {
@@ -73,6 +74,6 @@ beforeAll(async done => {
 
 afterAll(stopDB);
 
-/* describe('xxx', () => {
+describe('Books route works as expected', () => {
   it('xxx', () => { }); 
-}); */
+});
