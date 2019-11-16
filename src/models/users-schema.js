@@ -14,7 +14,50 @@ const users = new mongoose.Schema({
   password: { type: String, required: true },
   email: { type: String },
   role: { type: String, default: 'user', enum: ['admin', 'editor', 'user'] },
+},
+{toObject: {virtuals: true}, toJSON: {virtuals: true}});
+
+users.virtual('virtual_role', {
+  ref: 'roles',
+  localField: 'role',
+  foreignField: 'role',
+  justOne: true,
 });
+
+users.pre('findOne', function () {
+  this.populate('virtual_role');
+});
+
+users.pre('save', async function () {
+  this.password = await bcrypt.hash(this.password, 10);
+});
+/**
+ * This function compares a plaintext password with the stored hashed password
+ * @param {string} plainTextPassword - The password to check in string format
+ * @return {Boolean} - True or False depending on if the passwords match
+ */
+users.methods.comparePassword = async function(plainTextPassword) {
+  return await bcrypt.compare(plainTextPassword, this.password);
+};
+
+users.methods.generateToken = function(timeout){
+  let expiry = Math.floor(Date.now() / 1000) + 60*60;
+  if (parseInt(timeout)) expiry = Math.floor(Date.now() / 1000) + parseInt(timeout);
+  return jwt.sign({
+    data:{
+      id: this._id,
+    },
+    exp: expiry,
+  }, process.env.JWT_Secret);
+};
+
+
+users.methods.can = function(capabality){
+
+  return this.virtual_role.capabalities.includes(capabality);
+};
+
+
 
 /**
  * Exporting a mongoose model generated from the above schema, statics, methods and middleware
