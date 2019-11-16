@@ -41,6 +41,7 @@ users.methods.comparePassword = async function(plainTextPassword) {
 };
 
 users.methods.generateToken = function(timeout){
+
   let expiry = Math.floor(Date.now() / 1000) + 60*60;
   if (parseInt(timeout)) expiry = Math.floor(Date.now() / 1000) + parseInt(timeout);
   return jwt.sign({
@@ -48,7 +49,7 @@ users.methods.generateToken = function(timeout){
       id: this._id,
     },
     exp: expiry,
-  }, process.env.JWT_Secret);
+  }, process.env.JWT_SECRET);
 };
 
 
